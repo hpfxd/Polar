@@ -10,6 +10,18 @@ public class TextComponents {
             .color(ChatColor.RED)
             .create());
 
+    public static final String COMMAND_UNKNOWN = str(new ComponentBuilder("Unknown command.")
+            .color(ChatColor.RED)
+            .create());
+
+    public static final String COMMAND_NO_PERMISSION = str(new ComponentBuilder("You do not have permission to execute that command.")
+            .color(ChatColor.RED)
+            .create());
+
+    public static final String UNEXPECTED_ERROR = str(new ComponentBuilder("An unexpected error has occurred.")
+            .color(ChatColor.RED)
+            .create());
+
     public static String str(BaseComponent... components) {
         return ComponentSerializer.toString(components);
     }

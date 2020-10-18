@@ -2,6 +2,7 @@ package com.hpfxd.polar;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.hpfxd.polar.command.CommandManager;
 import com.hpfxd.polar.event.EventManager;
 import com.hpfxd.polar.network.NetworkManager;
 import com.hpfxd.polar.player.Player;
@@ -34,6 +35,7 @@ public class Polar {
     @Getter private final World world;
     @Getter private final List<Player> players = new ArrayList<>();
     @Getter private final EventManager eventManager = new EventManager();
+    @Getter private final CommandManager commandManager = new CommandManager();
 
     Polar() {
         log.info("Starting Polar.");
@@ -44,6 +46,10 @@ public class Polar {
 
         this.executorService = Executors.newScheduledThreadPool(this.config.getCoreExecutorPoolSize());
         this.world = new World(this.config.getWorldSize());
+
+        this.commandManager.registerEvents();
+        this.commandManager.registerDefaultCommands();
+
         this.networkManager = new NetworkManager();
     }
 

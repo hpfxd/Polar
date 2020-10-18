@@ -1,6 +1,7 @@
 package com.hpfxd.polar.player;
 
 import com.hpfxd.polar.Polar;
+import com.hpfxd.polar.event.player.PlayerChatEvent;
 import com.hpfxd.polar.event.player.PlayerDeathEvent;
 import com.hpfxd.polar.event.player.PlayerMoveEvent;
 import com.hpfxd.polar.event.player.PlayerSpawnEvent;
@@ -385,21 +386,27 @@ public class Player {
 
     // called when the player sends a message
     public void chat(String message) {
-        Packet packet = new PacketOutChatMessage(new ComponentBuilder()
-                .append(this.name).color(ChatColor.WHITE)
-                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to message.")
-                        .create()))
-                .event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/msg " + this.name + " "))
-                .append(": ").color(ChatColor.GRAY)
-                .event((ClickEvent) null)
-                .event((HoverEvent) null)
-                .append(message).color(ChatColor.GRAY)
-                .create());
+        PlayerChatEvent event = new PlayerChatEvent(this, message);
+        event.postEvent();
 
-        log.info("[CHAT] {}: {}", this.name, message);
-        this.world.sendPacketToPlayers(packet);
+        if (!event.isCancelled()) {
+            Packet packet = new PacketOutChatMessage(new ComponentBuilder()
+                    .append(this.name).color(ChatColor.WHITE)
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to message.")
+                            .create()))
+                    .event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/msg " + this.name + " "))
+                    .append(": ").color(ChatColor.GRAY)
+                    .event((ClickEvent) null)
+                    .event((HoverEvent) null)
+                    .append(message).color(ChatColor.GRAY)
+                    .create());
+
+            log.info("[CHAT] {}: {}", this.name, message);
+            this.world.sendPacketToPlayers(packet);
+        }
     }
 
     public void sendMessage(String message) {
+        this.channelHandler.sendPacket(new PacketOutChatMessage(message));
     }
 }

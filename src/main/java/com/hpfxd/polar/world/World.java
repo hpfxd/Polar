@@ -103,6 +103,14 @@ public class World {
         return null;
     }
 
+    public Player getPlayerByName(String name) {
+        for (Player player : this.players) {
+            if (player.getName().equalsIgnoreCase(name)) return player;
+        }
+
+        return null;
+    }
+
     public Chunk getChunkAtWorldPos(int x, int z) {
         return this.chunks[(x >> 4)][(z >> 4)];
     }
